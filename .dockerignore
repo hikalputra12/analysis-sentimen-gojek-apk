@@ -1,0 +1,34 @@
+# ==============================================================================
+# Docker Ignore Configuration for Hugging Face Spaces & Containers
+# ==============================================================================
+
+# Virtual Environment & Packages
+venv/
+.venv/
+env/
+
+# Sensitive Environment Files
+.env
+.env.*
+*.env
+
+# Cache & Bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Git & IDEs
+.git/
+.gitignore
+.dockerignore
+.vscode/
+.idea/
+.DS_Store
+
+# Jupyter Checkpoints
+.ipynb_checkpoints/
+*-checkpoint.ipynb
+
+# Logs
+*.log

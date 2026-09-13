@@ -1,0 +1,48 @@
+# ==============================================================================
+# Git Ignore Configuration for Gojek Sentiment Analysis
+# ==============================================================================
+
+# Environment & Sensitive Files
+.env
+.env.*
+!.env.example
+*.env
+
+# Python Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Jupyter Notebook Artifacts
+.ipynb_checkpoints/
+*-checkpoint.ipynb
+
+# IDE & OS Specific
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Packaging & Distribution
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Logs & Temporary Files
+*.log
+scratch/
+temp/
+tmp/

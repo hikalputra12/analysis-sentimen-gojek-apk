@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gojek App Sentiment Intelligence Lab | Live Tester</title>
+    <meta name="description" content="Platform Interaktif Analisis Sentimen Ulasan Aplikasi Gojek berbasis Machine Learning & NLP Bahasa Indonesia">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="navbar">
+            <div class="brand-group">
+                <div class="brand-icon">
+                    <span>🛵</span>
+                </div>
+                <div>
+                    <h1 class="brand-title">Gojek Sentiment Intelligence</h1>
+                    <p class="brand-subtitle">NLP Bahasa Indonesia & Machine Learning Pipeline</p>
+                </div>
+            </div>
+            <div class="status-badge" id="server-status">
+                <span class="status-dot"></span>
+                <span>Production Model Ready</span>
+            </div>
+        </header>
+
+        <!-- Main Grid Layout -->
+        <main class="dashboard-grid">
+            <!-- Left Column: Input & Controls -->
+            <section class="card input-card">
+                <div class="card-header">
+                    <div class="section-title-wrap">
+                        <span class="badge-tag">INTERACTIVE TESTER</span>
+                        <h2>Uji Kalimat Ulasan</h2>
+                    </div>
+                    <div class="model-selector-wrapper">
+                        <label for="model-select" class="selector-label">Pilih Model:</label>
+                        <select id="model-select" class="custom-select">
+                            <option value="random_forest" selected>Random Forest (TF-IDF) ★ 80% F1</option>
+                            <option value="svm">SVM RBF Kernel (TF-IDF)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="textarea-wrapper">
+                    <textarea 
+                        id="review-input" 
+                        class="custom-textarea" 
+                        placeholder="Ketik atau tempel ulasan pengguna di sini... (Contoh: 'Driver Gojek sangat ramah dan pesanan GoFood sampai tepat waktu!')"
+                        rows="4"
+                    ></textarea>
+                    <div class="textarea-footer">
+                        <span id="char-counter" class="char-count">0 karakter</span>
+                        <button id="clear-btn" class="btn-text">Bersihkan</button>
+                    </div>
+                </div>
+
+                <!-- Sample Presets -->
+                <div class="presets-section">
+                    <span class="presets-title">⚡ Contoh Ulasan Cepat:</span>
+                    <div class="preset-chips" id="preset-container">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button id="analyze-btn" class="btn-primary">
+                    <span class="btn-icon">⚡</span>
+                    <span id="btn-text">Analisis Sentimen Sekarang</span>
+                </button>
+            </section>
+
+            <!-- Right Column: Result Dashboard -->
+            <section class="card result-card" id="result-container">
+                <div class="card-header">
+                    <div class="section-title-wrap">
+                        <span class="badge-tag">AI INFERENCE</span>
+                        <h2>Hasil Analisis Real-Time</h2>
+                    </div>
+                    <span id="model-badge" class="mini-badge">Random Forest</span>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="empty-state">
+                    <div class="empty-icon">💡</div>
+                    <h3>Belum Ada Ulasan yang Dianalisis</h3>
+                    <p>Ketik ulasan atau klik salah satu contoh cepat di samping kiri untuk melihat prediksi sentimen, tingkat keyakinan, dan klaster topik.</p>
+                </div>
+
+                <!-- Live Results Content -->
+                <div id="result-content" class="result-content hidden">
+                    <!-- Sentiment Hero Badge -->
+                    <div class="sentiment-banner" id="sentiment-banner">
+                        <div class="sentiment-icon-box" id="sentiment-icon">🎉</div>
+                        <div class="sentiment-text-box">
+                            <span class="sentiment-subtext">Prediksi Sentimen:</span>
+                            <h3 class="sentiment-heading" id="sentiment-title">POSITIVE</h3>
+                        </div>
+                        <div class="confidence-badge-box">
+                            <span class="conf-label">Confidence</span>
+                            <span class="conf-val" id="confidence-val">88.5%</span>
+                        </div>
+                    </div>
+
+                    <!-- Topic Cluster Tag -->
+                    <div class="topic-box">
+                        <span class="topic-label">🏷️ Klaster Masalah / Kategori:</span>
+                        <span class="topic-tag" id="topic-tag">Sistem Pembayaran & Saldo GoPay</span>
+                    </div>
+
+                    <!-- Probabilities Breakdown -->
+                    <div class="distribution-section">
+                        <h4>Distribusi Probabilitas Kelas</h4>
+                        <div class="prob-bars">
+                            <div class="prob-row">
+                                <div class="prob-info">
+                                    <span class="dot dot-pos"></span>
+                                    <span>Positif</span>
+                                </div>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-fill fill-pos" id="bar-pos" style="width: 0%"></div>
+                                </div>
+                                <span class="prob-percent" id="pct-pos">0%</span>
+                            </div>
+                            <div class="prob-row">
+                                <div class="prob-info">
+                                    <span class="dot dot-neu"></span>
+                                    <span>Netral</span>
+                                </div>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-fill fill-neu" id="bar-neu" style="width: 0%"></div>
+                                </div>
+                                <span class="prob-percent" id="pct-neu">0%</span>
+                            </div>
+                            <div class="prob-row">
+                                <div class="prob-info">
+                                    <span class="dot dot-neg"></span>
+                                    <span>Negatif</span>
+                                </div>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-fill fill-neg" id="bar-neg" style="width: 0%"></div>
+                                </div>
+                                <span class="prob-percent" id="pct-neg">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NLP Engine Inspection -->
+                    <div class="nlp-details-box">
+                        <h4>🔍 Hasil Preprocessing NLP Bahasa Indonesia</h4>
+                        <div class="tokens-list" id="tokens-container">
+                            <!-- Tokens injected here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Insights & Dataset Stats Section -->
+        <section class="card stats-card">
+            <div class="stats-header">
+                <div class="section-title-wrap">
+                    <span class="badge-tag">DATASET & INSIGHTS</span>
+                    <h2>Intelligence Summary (15.000 Ulasan Terindeks)</h2>
+                </div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number" id="stat-total">15.000</span>
+                    <span class="stat-desc">Ulasan Google Play Store</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="stat-accuracy" style="color: #10B981">80.00%</span>
+                    <span class="stat-desc">Test Accuracy (Champion RF)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="stat-f1" style="color: #3B82F6">0.8013</span>
+                    <span class="stat-desc">Macro F1-Score (SMOTE)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" style="color: #F59E0B">4 Klaster</span>
+                    <span class="stat-desc">Peta, GoPay, Ongkir, App Bug</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- History Table Section -->
+        <section class="card history-card">
+            <div class="card-header">
+                <div class="section-title-wrap">
+                    <span class="badge-tag">SESSION LOG</span>
+                    <h2>Riwayat Pengujian Sesi Ini</h2>
+                </div>
+                <button id="clear-history-btn" class="btn-text">Hapus Riwayat</button>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-table" id="history-table">
+                    <thead>
+                        <tr>
+                            <th>Waktu</th>
+                            <th>Ulasan Pengguna</th>
+                            <th>Model</th>
+                            <th>Klaster Masalah</th>
+                            <th>Sentimen</th>
+                            <th>Keyakinan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-body">
+                        <tr class="empty-row">
+                            <td colspan="6">Belum ada riwayat ulasan yang diuji.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
